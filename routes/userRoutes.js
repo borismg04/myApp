@@ -1,13 +1,10 @@
-import express from "express";
-import { register } from "../controllers/userController";
+// const {Router} = require('express');
+// const router = Router();
 
-const router = express.Router();
+// router.get('/', (req, res) => {
+//   res.send('Hello World!');
+// }
+// );
 
-//Autenticacion, Registro y Confirmacion de usuario
-router.post("/", register);//Registro de usuario
-router.post("/login", login);
+// module.exports = router;
 
-
-
-
-export default router;

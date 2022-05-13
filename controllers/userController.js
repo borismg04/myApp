@@ -1,7 +1,6 @@
-const register = (req, res) => {
-    const { email, password } = req.body;
-}
+// const handlerRegisterUser = (req, res) => {
+// }
 
-export {
-  register,
-};
+// module.exports = {
+//   handlerRegisterUser
+// }

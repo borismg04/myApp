@@ -1,15 +1,17 @@
-const moongose = require('mongoose');
+import mongoose from 'mongoose';
+import env from 'dotenv';
 
-const URL = process.env.MONGO_DB_URL;
-
-async function connectDB() {
-  try {
-    await moongose.connect(URL)
-    console.log('MongoDB Connected...✅');
-  } catch (error) {
-    console.log(`⛔Error al conectar a la base de datos⛔: ${error}`);
-    process.exit(1);
-  }
+const connectDB = async () => {
+    try {
+      const connection = await mongoose.connect(process.env.MONGO_DB_URI, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      });
+      console.log(`MongoDB Connected ✅: ${connection.connection.host}`);
+    } catch (error) {
+        console.log(`⛔Error al conectar a la base de datos⛔: ${error}`);
+        process.exit(1);
+    }
 }
 
-module.exports = connectDB;
+export default connectDB;

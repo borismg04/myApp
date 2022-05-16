@@ -1,5 +1,6 @@
 import modelUser from "../models/User.js";
 import generateId from "../helpers/generateId.js";
+import generateJWT from "../helpers/generateJWT.js";
 
 //Registro de Usuario
 const handlerRegisterUser = async (req, res) => {
@@ -51,6 +52,7 @@ const handlerAuthenticateUser = async (req, res) => {
         _id: user._id,
         nombre: user.nombre,
         email: user.email,
+        token: generateJWT(user._id),
       });
     }else{
       const error = new Error("Contraseña incorrecta ⛔");

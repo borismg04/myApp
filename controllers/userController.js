@@ -62,8 +62,69 @@ const handlerAuthenticateUser = async (req, res) => {
     }
   }
 
+  const handlerConfirmUser = async (req, res) => {
+    const { token } = req.params;
+    const userConfirm = await modelUser.findOne({ token });
+    if (!userConfirm) {
+      const error = new Error("El token no existe ⛔");
+      return res.status(403).json({
+        message: error.message,
+      });
+    }
+
+    try {
+      userConfirm.confirmado = true;
+      userConfirm.token="";
+      await userConfirm.save();
+      res.json({
+        message: ` El usuario ${userConfirm.email} ha sido confirmado ✅`,
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "Error al confirmar el usuario ⛔" });
+    }
+  }
+
+  const handlerForgotPassword = async (req, res) => {
+    const { email } = req.body;
+    const user = await modelUser.findOne({ email });
+    if (!user) {
+      const error = new Error(`El usuario ${email} no existe ⛔`);
+      return res.status(404).json({
+        message: error.message,
+      });
+    }
+
+    try {
+      user.token = generateId();
+      await user.save();
+      res.json({
+        message: `Se ha enviado un correo al destino ${email} para restablecer la contraseña 📫`,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const handlerCheckToken = async (req, res) => {
+    const { token } = req.params;
+    const tokenValue = await modelUser.findOne({ token });
+    if (tokenValue) {
+      res.json({
+        message: `El token es valido y el Usuario existe ✅`,
+      });
+    } else {
+      const error = new Error(`El token no es valido ⛔`);
+      return res.status(404).json({
+        message: error.message,
+      });
+    }
+  }
 
 export {
   handlerRegisterUser,
   handlerAuthenticateUser,
+  handlerConfirmUser,
+  handlerForgotPassword,
+  handlerCheckToken,
 }

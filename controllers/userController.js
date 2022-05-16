@@ -32,7 +32,7 @@ const handlerAuthenticateUser = async (req, res) => {
   //Verificar si el usuario existe o no esta en la base de datos
   const user = await modelUser.findOne({ email });
     if (!user) {
-      const error = new Error("El usuario no existe ⚠️");
+      const error = new Error("El usuario no existe ⛔");
       return res.status(404).json({
         message: error.message,
       });
@@ -45,6 +45,19 @@ const handlerAuthenticateUser = async (req, res) => {
       });
     }
     //Verificar si la contraseña es correcta
+    if (await user.isValidPassword(password)) {
+      res.json({
+        message: "Usuario autenticado correctamente ✅",
+        _id: user._id,
+        nombre: user.nombre,
+        email: user.email,
+      });
+    }else{
+      const error = new Error("Contraseña incorrecta ⛔");
+      return res.status(403).json({
+        message: error.message,
+      });
+    }
   }
 
 

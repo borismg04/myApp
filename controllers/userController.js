@@ -1,6 +1,7 @@
 import modelUser from "../models/User.js";
 import generateId from "../helpers/generateId.js";
 
+//Registro de Usuario
 const handlerRegisterUser = async (req, res) => {
   // Evitar registro de usuarios duplicados
   const { email } = req.body;
@@ -24,8 +25,30 @@ const handlerRegisterUser = async (req, res) => {
     console.log(error);
     res.status(500).json({ message: "Error al registrar el usuario ⛔" });
   }
-}
+};
+
+const handlerAuthenticateUser = async (req, res) => {
+  const { email , password } = req.body;
+  //Verificar si el usuario existe o no esta en la base de datos
+  const user = await modelUser.findOne({ email });
+    if (!user) {
+      const error = new Error("El usuario no existe ⚠️");
+      return res.status(404).json({
+        message: error.message,
+      });
+    }
+  //verificar si el usuario esta confirmad o no
+    if (!user.confirmado) {
+      const error = new Error("Tu cuenta no ha sido confirmada ⚠️");
+      return res.status(403).json({
+        message: error.message,
+      });
+    }
+    //Verificar si la contraseña es correcta
+  }
+
 
 export {
-  handlerRegisterUser
+  handlerRegisterUser,
+  handlerAuthenticateUser,
 }

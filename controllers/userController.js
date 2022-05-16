@@ -1,4 +1,6 @@
 import modelUser from "../models/User.js";
+import generateId from "../helpers/generateId.js";
+
 const handlerRegisterUser = async (req, res) => {
   // Evitar registro de usuarios duplicados
   const { email } = req.body;
@@ -14,6 +16,8 @@ const handlerRegisterUser = async (req, res) => {
   console.log(`El usuario ${email} ya existe`);
   try {
     const user = new modelUser(req.body);
+    user.token = generateId();
+
     const userRegister = await user.save();
     res.json({message: "Usuario registrado correctamente✅", userRegister});
   } catch (error) {

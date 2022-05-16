@@ -1,10 +1,8 @@
-// const {Router} = require('express');
-// const router = Router();
+import express from 'express';
+import { handlerRegisterUser } from '../controllers/userController.js';
+const router = express.Router();
 
-// router.get('/', (req, res) => {
-//   res.send('Hello World!');
-// }
-// );
+router.post('/',handlerRegisterUser);
 
-// module.exports = router;
 
+export default router;

@@ -2,6 +2,8 @@ import Proyecto from '../models/Project.js';
 
 
 const handlerObtenerProyectos = async (req, res) => {
+  const proyectos = await Proyecto.find().where('creador').equals(req.user);
+  res.json(proyectos);
 
 }
 
@@ -18,7 +20,21 @@ const handlerNuevoProyecto= async (req, res) => {
 }
 
 const handlesObtenerProyecto = async (req, res) => {
+  const { id } = req.params;
 
+  const proyecto = await Proyecto.findById(id);
+
+  if (!proyecto) {
+    return res.status(404).json({
+      msg: 'Proyecto no encontrado ⛔',
+    });
+  }
+  if(proyecto.creador.toString()=== req.user._id.toString()){
+    return res.status(401).json({
+      msg: 'No esta Autorizado ⛔',
+  });
+  }
+res.json(proyecto);
 }
 
 const handlerEditaarProyecto= async (req, res) => {

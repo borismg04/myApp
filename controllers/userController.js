@@ -151,6 +151,7 @@ const handlerAuthenticateUser = async (req, res) => {
     res.json(user);
   }
 
+
 export {
   handlerRegisterUser,
   handlerAuthenticateUser,

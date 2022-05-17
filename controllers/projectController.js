@@ -1,37 +1,42 @@
-const obtainAllProjects = async (req, res) => {
+const handlerObtenerProyectos = async (req, res) => {
 
 }
 
-const newProject = async (req, res) => {
+const handlerNuevoProyecto= async (req, res) => {
 
 }
 
-const handlesObtainProject = async (req, res) => {
+const handlesObtenerProyecto = async (req, res) => {
 
 }
 
-const handlerEditProject = async (req, res) => {
+const handlerEditaarProyecto= async (req, res) => {
 
 }
 
-const handlerDeleteProject = async (req, res) => {
+const handlerEliminarProyecto = async (req, res) => {
 
 }
 
-const handlerAddCollaborator = async (req, res) => {
+const handlerAgregarColaborador = async (req, res) => {
 
 }
 
-const handlerRemoveCollaborator = async (req, res) => {
+const handlerEliminarColaborador = async (req, res) => {
+
+}
+
+const handlerAgregarTarea = async (req, res) => {
 
 }
 
 export {
-  obtainAllProjects,
-  newProject,
-  handlesObtainProject,
-  handlerEditProject,
-  handlerDeleteProject,
-  handlerAddCollaborator,
-  handlerRemoveCollaborator
+  handlerObtenerProyectos,
+  handlerNuevoProyecto,
+  handlesObtenerProyecto,
+  handlerEditaarProyecto,
+  handlerEliminarProyecto,
+  handlerAgregarColaborador,
+  handlerEliminarColaborador,
+  handlerAgregarTarea
 }

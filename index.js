@@ -13,6 +13,7 @@ conectarDB();
 
 // ROUTING
 app.use('/api/users', userRoutes);
+app.use('/api/proyectos', userRoutes);
 
 
 // Conexion a la base de datos

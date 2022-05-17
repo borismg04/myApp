@@ -1,9 +1,20 @@
+import Proyecto from '../models/Project.js';
+
+
 const handlerObtenerProyectos = async (req, res) => {
 
 }
 
 const handlerNuevoProyecto= async (req, res) => {
+  const proyectos = await Proyecto(req.body);
+  proyectos.creador = req.user._id;
 
+  try {
+    const nuevoProyecto = await proyectos.save();
+    res.json(nuevoProyecto);
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 const handlesObtenerProyecto = async (req, res) => {

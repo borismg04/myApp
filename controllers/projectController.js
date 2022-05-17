@@ -99,7 +99,7 @@ const handlerEliminarProyecto = async (req, res) => {
 
 // }
 
-// const handlerAgregarTarea = async (req, res) => {
+// const handlerObtenerTarea = async (req, res) => {
 
 // }
 
@@ -111,5 +111,5 @@ export {
   handlerEliminarProyecto,
   // handlerAgregarColaborador,
   // handlerEliminarColaborador,
-  // handlerAgregarTarea
+  // handlerObtenerTarea
 }

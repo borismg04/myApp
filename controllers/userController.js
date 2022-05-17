@@ -38,7 +38,7 @@ const handlerAuthenticateUser = async (req, res) => {
         message: error.message,
       });
     }
-  //verificar si el usuario esta confirmad o no
+  //verificar si el usuario esta confirmado
     if (!user.confirmado) {
       const error = new Error("Tu cuenta no ha sido confirmada ⚠️");
       return res.status(403).json({
@@ -121,10 +121,42 @@ const handlerAuthenticateUser = async (req, res) => {
     }
   }
 
+  const handlerChangePassword = async (req, res) => {
+    const { token } = req.params;
+    const { password } = req.body;
+
+    const user = await modelUser.findOne({ token });
+    if (user) {
+      user.password = password;
+      user.token = "";
+      try {
+        await user.save();
+        res.json({
+          message: `La contraseña ha sido cambiada ✅`,
+        });
+      } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Error al cambiar la contraseña ⛔" });
+      }
+    } else {
+      const error = new Error(`El token no es valido ⛔`);
+      return res.status(404).json({
+        message: error.message,
+      });
+    }
+  }
+
+  const perfil = async (req, res) => {
+    console.log("desde perfil....");
+
+  }
+
 export {
   handlerRegisterUser,
   handlerAuthenticateUser,
   handlerConfirmUser,
   handlerForgotPassword,
   handlerCheckToken,
+  handlerChangePassword,
+  perfil
 }

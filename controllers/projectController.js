@@ -47,7 +47,7 @@ const handlerEditarProyecto= async (req, res) => {
       msg: 'Proyecto no encontrado ⛔',
     });
   }
-  if(proyecto.creador.toString()=== req.user._id.toString()){
+  if(proyecto.creador.toString() !== req.user._id.toString()){
     return res.status(401).json({
       msg: 'No esta Autorizado ⛔',
   });
@@ -67,20 +67,41 @@ const handlerEditarProyecto= async (req, res) => {
 }
 
 const handlerEliminarProyecto = async (req, res) => {
+  const { id } = req.params;
 
+  const proyecto = await Proyecto.findById(id);
+
+  if (!proyecto) {
+    return res.status(404).json({
+      msg: 'Proyecto no encontrado ⛔',
+    });
+  }
+  if(proyecto.creador.toString() !== req.user._id.toString()){
+      return res.status(401).json({
+        msg: 'No esta Autorizado ⛔',
+    });
+  }
+  try {
+    await proyecto.deleteOne();
+    res.json({
+      msg: 'Proyecto eliminado ✅',
+      });
+  } catch (error) {
+    console.log(error);
+  }
 }
 
-const handlerAgregarColaborador = async (req, res) => {
+// const handlerAgregarColaborador = async (req, res) => {
 
-}
+// }
 
-const handlerEliminarColaborador = async (req, res) => {
+// const handlerEliminarColaborador = async (req, res) => {
 
-}
+// }
 
-const handlerAgregarTarea = async (req, res) => {
+// const handlerAgregarTarea = async (req, res) => {
 
-}
+// }
 
 export {
   handlerObtenerProyectos,
@@ -88,7 +109,7 @@ export {
   handlesObtenerProyecto,
   handlerEditarProyecto,
   handlerEliminarProyecto,
-  handlerAgregarColaborador,
-  handlerEliminarColaborador,
-  handlerAgregarTarea
+  // handlerAgregarColaborador,
+  // handlerEliminarColaborador,
+  // handlerAgregarTarea
 }

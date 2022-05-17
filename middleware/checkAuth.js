@@ -19,7 +19,7 @@ const checkAuth = async ( req , res , next ) => {
 
       } catch (error) {
         return res.status(404).json({
-          message: error.message,
+          message: `Token invalido ${error.message} ⛔` ,
         });
       }
     }

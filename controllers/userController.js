@@ -147,8 +147,8 @@ const handlerAuthenticateUser = async (req, res) => {
   }
 
   const perfil = async (req, res) => {
-    console.log("desde perfil....");
-
+    const {user}=req;
+    res.json(user);
   }
 
 export {

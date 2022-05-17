@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 import express from 'express';
 import conectarDB from './config/database.js';
 import userRoutes from './routes/userRoutes.js';
+import projectRoutes from './routes/projectRoutes.js';
 
 
 const app = express();
@@ -13,6 +14,7 @@ conectarDB();
 
 // ROUTING
 app.use('/api/users', userRoutes);
+app.use('/api/proyectos', projectRoutes);
 
 
 // Conexion a la base de datos

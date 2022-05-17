@@ -25,3 +25,13 @@ const handlerAddCollaborator = async (req, res) => {
 const handlerRemoveCollaborator = async (req, res) => {
 
 }
+
+export {
+  obtainAllProjects,
+  newProject,
+  handlesObtainProject,
+  handlerEditProject,
+  handlerDeleteProject,
+  handlerAddCollaborator,
+  handlerRemoveCollaborator
+}

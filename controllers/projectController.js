@@ -37,8 +37,33 @@ const handlesObtenerProyecto = async (req, res) => {
 res.json(proyecto);
 }
 
-const handlerEditaarProyecto= async (req, res) => {
+const handlerEditarProyecto= async (req, res) => {
+  const { id } = req.params;
 
+  const proyecto = await Proyecto.findById(id);
+
+  if (!proyecto) {
+    return res.status(404).json({
+      msg: 'Proyecto no encontrado ⛔',
+    });
+  }
+  if(proyecto.creador.toString()=== req.user._id.toString()){
+    return res.status(401).json({
+      msg: 'No esta Autorizado ⛔',
+  });
+  }
+  proyecto.nombre = req.body.nombre || proyecto.nombre;
+  proyecto.descripcion = req.body.descripcion || proyecto.descripcion;
+  proyecto.fechaEntrega = req.body.fechaEntrega || proyecto.fechaEntrega;
+  proyecto.cliente = req.body.cliente || proyecto.cliente;
+
+  try {
+    const nuevoProyecto = await proyecto.save();
+    res.json(nuevoProyecto);
+  }
+  catch (error) {
+    console.log(error);
+  }
 }
 
 const handlerEliminarProyecto = async (req, res) => {
@@ -61,7 +86,7 @@ export {
   handlerObtenerProyectos,
   handlerNuevoProyecto,
   handlesObtenerProyecto,
-  handlerEditaarProyecto,
+  handlerEditarProyecto,
   handlerEliminarProyecto,
   handlerAgregarColaborador,
   handlerEliminarColaborador,

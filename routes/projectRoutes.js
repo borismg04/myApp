@@ -3,7 +3,7 @@ import {
   handlerObtenerProyectos,
   handlerNuevoProyecto,
   handlesObtenerProyecto,
-  handlerEditaarProyecto,
+  handlerEditarProyecto,
   handlerEliminarProyecto,
   handlerAgregarColaborador,
   handlerEliminarColaborador,
@@ -16,7 +16,7 @@ const router = express.Router();
 router.get('/',checkAuth,handlerObtenerProyectos);
 router.post('/',checkAuth,handlerNuevoProyecto);
 router.get('/:id',checkAuth,handlesObtenerProyecto);
-router.put('/:id',checkAuth,handlerEditaarProyecto);
+router.put('/:id',checkAuth,handlerEditarProyecto);
 router.delete('/:id',checkAuth,handlerEliminarProyecto);
 
 router.post('/tareas/:id',checkAuth,handlerAgregarTarea);

@@ -1,5 +1,6 @@
 import modelUser from "../models/User.js";
 import generateId from "../helpers/generateId.js";
+import generateJWT from "../helpers/generateJWT.js";
 
 //Registro de Usuario
 const handlerRegisterUser = async (req, res) => {
@@ -37,7 +38,7 @@ const handlerAuthenticateUser = async (req, res) => {
         message: error.message,
       });
     }
-  //verificar si el usuario esta confirmad o no
+  //verificar si el usuario esta confirmado
     if (!user.confirmado) {
       const error = new Error("Tu cuenta no ha sido confirmada ⚠️");
       return res.status(403).json({
@@ -51,6 +52,7 @@ const handlerAuthenticateUser = async (req, res) => {
         _id: user._id,
         nombre: user.nombre,
         email: user.email,
+        token: generateJWT(user._id),
       });
     }else{
       const error = new Error("Contraseña incorrecta ⛔");
@@ -60,8 +62,101 @@ const handlerAuthenticateUser = async (req, res) => {
     }
   }
 
+  const handlerConfirmUser = async (req, res) => {
+    const { token } = req.params;
+    const userConfirm = await modelUser.findOne({ token });
+    if (!userConfirm) {
+      const error = new Error("El token no existe ⛔");
+      return res.status(403).json({
+        message: error.message,
+      });
+    }
+
+    try {
+      userConfirm.confirmado = true;
+      userConfirm.token="";
+      await userConfirm.save();
+      res.json({
+        message: ` El usuario ${userConfirm.email} ha sido confirmado ✅`,
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "Error al confirmar el usuario ⛔" });
+    }
+  }
+
+  const handlerForgotPassword = async (req, res) => {
+    const { email } = req.body;
+    const user = await modelUser.findOne({ email });
+    if (!user) {
+      const error = new Error(`El usuario ${email} no existe ⛔`);
+      return res.status(404).json({
+        message: error.message,
+      });
+    }
+
+    try {
+      user.token = generateId();
+      await user.save();
+      res.json({
+        message: `Se ha enviado un correo al destino ${email} para restablecer la contraseña 📫`,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const handlerCheckToken = async (req, res) => {
+    const { token } = req.params;
+    const tokenValue = await modelUser.findOne({ token });
+    if (tokenValue) {
+      res.json({
+        message: `El token es valido y el Usuario existe ✅`,
+      });
+    } else {
+      const error = new Error(`El token no es valido ⛔`);
+      return res.status(404).json({
+        message: error.message,
+      });
+    }
+  }
+
+  const handlerChangePassword = async (req, res) => {
+    const { token } = req.params;
+    const { password } = req.body;
+
+    const user = await modelUser.findOne({ token });
+    if (user) {
+      user.password = password;
+      user.token = "";
+      try {
+        await user.save();
+        res.json({
+          message: `La contraseña ha sido cambiada ✅`,
+        });
+      } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Error al cambiar la contraseña ⛔" });
+      }
+    } else {
+      const error = new Error(`El token no es valido ⛔`);
+      return res.status(404).json({
+        message: error.message,
+      });
+    }
+  }
+
+  const perfil = async (req, res) => {
+    const {user}=req;
+    res.json(user);
+  }
 
 export {
   handlerRegisterUser,
   handlerAuthenticateUser,
+  handlerConfirmUser,
+  handlerForgotPassword,
+  handlerCheckToken,
+  handlerChangePassword,
+  perfil
 }

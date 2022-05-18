@@ -5,9 +5,9 @@ import {
   handlesObtenerProyecto,
   handlerEditarProyecto,
   handlerEliminarProyecto,
-  handlerAgregarColaborador,
-  handlerEliminarColaborador,
-  handlerAgregarTarea
+  // handlerAgregarColaborador,
+  // handlerEliminarColaborador,
+  // handlerObtenerTarea
 } from '../controllers/projectController.js';
 import checkAuth from '../middleware/checkAuth.js';
 
@@ -19,10 +19,10 @@ router.get('/:id',checkAuth,handlesObtenerProyecto);
 router.put('/:id',checkAuth,handlerEditarProyecto);
 router.delete('/:id',checkAuth,handlerEliminarProyecto);
 
-router.post('/tareas/:id',checkAuth,handlerAgregarTarea);
+// router.post('/tareas/:id',checkAuth,handlerObtenerTarea);
 
-router.post('/agregar-colaborador/:id',checkAuth,handlerAgregarColaborador);
-router.post('/eliminar-colaborador/:id',checkAuth,handlerEliminarColaborador);
+// router.post('/agregar-colaborador/:id',checkAuth,handlerAgregarColaborador);
+// router.post('/eliminar-colaborador/:id',checkAuth,handlerEliminarColaborador);
 
 
 export default router;

@@ -3,6 +3,7 @@ import express from 'express';
 import conectarDB from './config/database.js';
 import userRoutes from './routes/userRoutes.js';
 import projectRoutes from './routes/projectRoutes.js';
+import taskRoutes from './routes/taskRoutes.js';
 
 
 const app = express();
@@ -15,6 +16,7 @@ conectarDB();
 // ROUTING
 app.use('/api/users', userRoutes);
 app.use('/api/proyectos', projectRoutes);
+app.use('/api/tareas', taskRoutes);
 
 
 // Conexion a la base de datos

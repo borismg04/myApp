@@ -12,6 +12,7 @@ import checkAuth from '../middleware/checkAuth.js';
 
 const router = express.Router();
 
+//Routes para el registro de usuarios
 router.post('/',handlerRegisterUser);
 router.post('/login',handlerAuthenticateUser);
 router.get('/confirmar/:token',handlerConfirmUser);

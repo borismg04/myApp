@@ -21,6 +21,7 @@ const handlerNuevoProyecto= async (req, res) => {
 
 const handlesObtenerProyecto = async (req, res) => {
   const { id } = req.params;
+  console.log(id);
 
   const proyecto = await Proyecto.findById(id);
 
@@ -31,7 +32,7 @@ const handlesObtenerProyecto = async (req, res) => {
   }
   if(proyecto.creador.toString()=== req.user._id.toString()){
     return res.status(401).json({
-      msg: 'No esta Autorizado ⛔',
+    msg:   'No esta Autorizado ⛔',
   });
   }
 res.json(proyecto);
@@ -99,7 +100,7 @@ const handlerEliminarProyecto = async (req, res) => {
 
 // }
 
-// const handlerAgregarTarea = async (req, res) => {
+// const handlerObtenerTarea = async (req, res) => {
 
 // }
 
@@ -111,5 +112,5 @@ export {
   handlerEliminarProyecto,
   // handlerAgregarColaborador,
   // handlerEliminarColaborador,
-  // handlerAgregarTarea
+  // handlerObtenerTarea
 }

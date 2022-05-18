@@ -14,7 +14,8 @@ router.post('/',checkAuth,handlerAgregarTareas);
 router.get('/:id',checkAuth,handlerObtenerTarea);
 router.put('/:id',checkAuth,handlerEditarTarea);
 router.delete('/:id',checkAuth,handlerEliminarTarea);
-router.put('/cambiar-estado/:id',checkAuth,handlerCambiarEstadoTarea);
+
+router.post('/cambiar-estado/:id',checkAuth,handlerCambiarEstadoTarea);
 
 
 export default router;

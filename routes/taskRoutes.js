@@ -4,7 +4,7 @@ import {
   handlerObtenerTarea,
   handlerEditarTarea,
   handlerEliminarTarea,
-  handlerCambiarEstadoTarea,
+  // handlerCambiarEstadoTarea,
 } from '../controllers/taskController.js';
 import checkAuth from '../middleware/checkAuth.js';
 
@@ -15,7 +15,7 @@ router.get('/:id',checkAuth,handlerObtenerTarea);
 router.put('/:id',checkAuth,handlerEditarTarea);
 router.delete('/:id',checkAuth,handlerEliminarTarea);
 
-router.post('/cambiar-estado/:id',checkAuth,handlerCambiarEstadoTarea);
+// router.post('/cambiar-estado/:id',checkAuth,handlerCambiarEstadoTarea);
 
 
 export default router;

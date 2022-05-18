@@ -50,7 +50,34 @@ const handlerObtenerTarea = async (req, res) => {
 }
 
 const handlerEditarTarea = async (req, res) => {
+  const { id } = req.params;
+  const tarea = await Tarea.findById(id).populate('proyecto');
 
+  if (!tarea) {
+    const error = new Error('Tarea no existe ⛔');
+    return res.status(404).json({
+      msg: error.message,
+    });
+  }
+
+  if (tarea.proyecto.creador.toString() !== req.user._id.toString()) {
+    const error = new Error('No tienes permisos para ver esta tarea ⛔');
+    return res.status(403).json({
+    msg: error.message,
+  });
+  }
+
+  tarea.nombre = req.body.nombre || tarea.nombre;
+  tarea.descripcion = req.body.descripcion || tarea.descripcion;
+  tarea.prioridad = req.body.prioridad || tarea.prioridad;
+  tarea.fechaEntrega = req.body.fechaEntrega || tarea.fechaEntrega;
+
+  try{
+    const nuevaTarea = await tarea.save();
+    res.json(nuevaTarea)
+  }catch(error){
+    console.log(error);
+  }
 }
 
 const handlerEliminarTarea = async (req, res) => {

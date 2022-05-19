@@ -30,7 +30,7 @@ const handlesObtenerProyecto = async (req, res) => {
       msg: 'Proyecto no encontrado ⛔',
     });
   }
-  if(proyecto.creador.toString()=== req.user._id.toString()){
+  if(proyecto.creador.toString() !== req.user._id.toString()){
     return res.status(401).json({
     msg:   'No esta Autorizado ⛔',
   });

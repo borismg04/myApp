@@ -30,7 +30,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
+//email
 // ROUTING
 app.use('/api/users', userRoutes);
 app.use('/api/proyectos', projectRoutes);

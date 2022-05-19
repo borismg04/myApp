@@ -11,20 +11,18 @@ const handlerRegisterUser = async (req, res) => {
   if (userDuplicate) {
     const error = new Error("El usuario ya existe ⛔");
     return res.status(400).json({
-      message: error.message,
+      msg: error.message,
     });
   }
 
-  console.log(`El usuario ${email} ya existe`);
   try {
     const user = new modelUser(req.body);
     user.token = generateId();
-
-    const userRegister = await user.save();
-    res.json({message: "Usuario registrado correctamente✅", userRegister});
+    await user.save();
+    res.json({msg: "Usuario registrado correctamente✅,Revisa tu correo para confirmar tu cuenta📧"});
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Error al registrar el usuario ⛔" });
+    // res.status(500).json({ msg: "Error al registrar el usuario ⛔" });
   }
 };
 

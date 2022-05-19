@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 
+//TODO: Mover hacia un cliente Axios
 export const emailRegistro = async (datos)=>{
   const { email , nombre , token } = datos;
 
@@ -14,16 +15,16 @@ export const emailRegistro = async (datos)=>{
 
   // Información del correo
   const info = await transport.sendMail({
-    from: '"MyTimeUp - Admin de Proyectos" <cuentas@mytimeup.com>',
+    from: '"MyTimeApp - Admin de Proyectos" <cuentas@mytimeapp.com>',
     to: email,
-    subject: "MyTimeUp - Confirma tu cuenta ✅",
+    subject: "MyTimeApp - Confirma tu cuenta ✅",
     text: "Comprueba tu Cuenta 📧",
-    html: `<p>Hola ${nombre} Comprueba tu cuenta en MyTimeUp🎉</p>
+    html: `<p>Hola ${nombre} Comprueba tu cuenta en MyTimeApp🎉</p>
     <p>Tu cuenta ya esta casi lista, solo debes comprobarla en el sigueinte enlace:
 
     <a href="${process.env.FRONTEND_URL}/confirmar/${token}">Confirmar Cuenta</a>
 
-    <p>Si no has solicitado una cuenta en MyTimeUp, por favor ignora este mensaje.</p>
+    <p>Si no has solicitado una cuenta en MyTimeApp, por favor ignora este mensaje.</p>
 
 
     `
@@ -46,16 +47,17 @@ export const emailOlvidePassword = async (datos)=>{
 
   // Información del correo
   const info = await transport.sendMail({
-    from: '"MyTimeUp - Admin de Proyectos" <cuentas@mytimeup.com>',
+    from: '"MyTimeApp - Admin de Proyectos" <cuentas@mytimeApp.com>',
     to: email,
-    subject: "MyTimeUp - Confirma tu cuenta ✅",
-    text: "Comprueba tu Cuenta 📧",
-    html: `<p>Hola ${nombre} Comprueba tu cuenta en MyTimeUp🎉</p>
-    <p>Tu cuenta ya esta casi lista, solo debes comprobarla en el sigueinte enlace:
+    subject: "MyTimeApp - Reestablece tu Contraseña🔄",
+    text: "Reestablece tu contraseña 🔄",
+    html: `<p>Hola ${nombre} has solicitado reestablecer tu contraseña</p>
 
-    <a href="${process.env.FRONTEND_URL}/confirmar/${token}">Confirmar Cuenta</a>
+    <p>Sigue el siguiente enlace para generar tu nueva contraseña:
 
-    <p>Si no has solicitado una cuenta en MyTimeUp, por favor ignora este mensaje.</p>
+    <a href="${process.env.FRONTEND_URL}/olvide-password/${token}">Reestablecer Contraseña</a>
+
+    <p>Si tu no has solicitado este email, por favor ignora este mensaje.</p>
 
 
     `

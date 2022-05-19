@@ -19,10 +19,9 @@ router.get('/:id',checkAuth,handlesObtenerProyecto);
 router.put('/:id',checkAuth,handlerEditarProyecto);
 router.delete('/:id',checkAuth,handlerEliminarProyecto);
 
-// router.post('/tareas/:id',checkAuth,handlerObtenerTarea);
-
 // router.post('/agregar-colaborador/:id',checkAuth,handlerAgregarColaborador);
 // router.post('/eliminar-colaborador/:id',checkAuth,handlerEliminarColaborador);
 
+// router.get('/tareas/:id',checkAuth,handlerObtenerTarea);
 
 export default router;

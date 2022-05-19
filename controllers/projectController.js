@@ -1,5 +1,5 @@
 import Proyecto from '../models/Project.js';
-
+import Tarea from '../models/Task.js';
 
 const handlerObtenerProyectos = async (req, res) => {
   const proyectos = await Proyecto.find().where('creador').equals(req.user);
@@ -30,12 +30,19 @@ const handlesObtenerProyecto = async (req, res) => {
       msg: 'Proyecto no encontrado ⛔',
     });
   }
-  if(proyecto.creador.toString()=== req.user._id.toString()){
+  if(proyecto.creador.toString() !== req.user._id.toString()){
     return res.status(401).json({
     msg:   'No esta Autorizado ⛔',
   });
   }
-res.json(proyecto);
+
+  // Obtener las tareas de los proyectos creados por ID
+  const tareas = await Tarea.find().where('proyecto').equals(proyecto._id);
+
+  res.json({
+    proyecto,
+    tareas
+  } );
 }
 
 const handlerEditarProyecto= async (req, res) => {
@@ -101,6 +108,21 @@ const handlerEliminarProyecto = async (req, res) => {
 // }
 
 // const handlerObtenerTarea = async (req, res) => {
+//   const { id } = req.params;
+
+//   const existeProyecto = await Proyecto.findById(id);
+
+//   if (!existeProyecto) {
+//     const error = new Error('Proyecto no encontrado ⛔');
+//     return res.status(404).json({
+//       msg: error.message,
+//     });
+//   }
+//   // Aqui se tiene que verificar que el usuario sea el creador del proyecto o el colaborador
+
+//   const tareas = await Tarea.find().where('proyecto').equals(id);
+
+//   res.json(tareas);
 
 // }
 
@@ -112,5 +134,5 @@ export {
   handlerEliminarProyecto,
   // handlerAgregarColaborador,
   // handlerEliminarColaborador,
-  // handlerObtenerTarea
+  // handlerObtenerTarea,
 }

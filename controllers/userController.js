@@ -76,7 +76,7 @@ const handlerAuthenticateUser = async (req, res) => {
     if (!userConfirm) {
       const error = new Error("El token no existe ⛔");
       return res.status(403).json({
-        message: error.message,
+        msg: error.message,
       });
     }
 
@@ -85,11 +85,11 @@ const handlerAuthenticateUser = async (req, res) => {
       userConfirm.token="";
       await userConfirm.save();
       res.json({
-        message: ` El usuario ${userConfirm.email} ha sido confirmado ✅`,
+        msg: ` El usuario ${userConfirm.email} ha sido confirmado ✅`,
       });
     } catch (error) {
       console.log(error);
-      res.status(500).json({ message: "Error al confirmar el usuario ⛔" });
+      res.status(500).json({ msg: "Error al confirmar el usuario ⛔" });
     }
   }
 

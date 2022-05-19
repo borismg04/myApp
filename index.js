@@ -18,7 +18,6 @@ app.use('/api/users', userRoutes);
 app.use('/api/proyectos', projectRoutes);
 app.use('/api/tareas', taskRoutes);
 
-
 // Conexion a la base de datos
 const PORT = process.env.PORT || 8080;
 

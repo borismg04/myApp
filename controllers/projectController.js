@@ -1,5 +1,5 @@
 import Proyecto from '../models/Project.js';
-import Tarea from '../models/Task.js';
+// import Tarea from '../models/Task.js';
 
 const handlerObtenerProyectos = async (req, res) => {
   const proyectos = await Proyecto.find().where('creador').equals(req.user);
@@ -36,13 +36,7 @@ const handlesObtenerProyecto = async (req, res) => {
   });
   }
 
-  // Obtener las tareas de los proyectos creados por ID
-  const tareas = await Tarea.find().where('proyecto').equals(proyecto._id);
-
-  res.json({
-    proyecto,
-    tareas
-  } );
+  res.json(proyecto);
 }
 
 const handlerEditarProyecto= async (req, res) => {

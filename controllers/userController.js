@@ -1,6 +1,7 @@
 import modelUser from "../models/User.js";
 import generateId from "../helpers/generateId.js";
 import generateJWT from "../helpers/generateJWT.js";
+import {emailRegistro , emailOlvidePassword} from '../helpers/email.js';
 
 //Registro de Usuario
 const handlerRegisterUser = async (req, res) => {
@@ -19,6 +20,15 @@ const handlerRegisterUser = async (req, res) => {
     const user = new modelUser(req.body);
     user.token = generateId();
     await user.save();
+
+    //Enviar correo de confirmacion
+    emailRegistro({
+      email: user.email,
+      nombre: user.nombre,
+      token: user.token,
+    });
+
+
     res.json({msg: "Usuario registrado correctamente✅,Revisa tu correo para confirmar tu cuenta📧"});
   } catch (error) {
     console.log(error);
@@ -33,20 +43,20 @@ const handlerAuthenticateUser = async (req, res) => {
     if (!user) {
       const error = new Error("El usuario no existe ⛔");
       return res.status(404).json({
-        message: error.message,
+        msg: error.message,
       });
     }
   //verificar si el usuario esta confirmado
     if (!user.confirmado) {
       const error = new Error("Tu cuenta no ha sido confirmada ⚠️");
       return res.status(403).json({
-        message: error.message,
+        msg: error.message,
       });
     }
     //Verificar si la contraseña es correcta
     if (await user.isValidPassword(password)) {
       res.json({
-        message: "Usuario autenticado correctamente ✅",
+        msg: "Usuario autenticado correctamente ✅",
         _id: user._id,
         nombre: user.nombre,
         email: user.email,
@@ -55,7 +65,7 @@ const handlerAuthenticateUser = async (req, res) => {
     }else{
       const error = new Error("Contraseña incorrecta ⛔");
       return res.status(403).json({
-        message: error.message,
+        msg: error.message,
       });
     }
   }
@@ -66,7 +76,7 @@ const handlerAuthenticateUser = async (req, res) => {
     if (!userConfirm) {
       const error = new Error("El token no existe ⛔");
       return res.status(403).json({
-        message: error.message,
+        msg: error.message,
       });
     }
 
@@ -75,11 +85,11 @@ const handlerAuthenticateUser = async (req, res) => {
       userConfirm.token="";
       await userConfirm.save();
       res.json({
-        message: ` El usuario ${userConfirm.email} ha sido confirmado ✅`,
+        msg: ` El usuario ${userConfirm.email} ha sido confirmado ✅`,
       });
     } catch (error) {
       console.log(error);
-      res.status(500).json({ message: "Error al confirmar el usuario ⛔" });
+      res.status(500).json({ msg: "Error al confirmar el usuario ⛔" });
     }
   }
 
@@ -87,18 +97,28 @@ const handlerAuthenticateUser = async (req, res) => {
     const { email } = req.body;
     const user = await modelUser.findOne({ email });
     if (!user) {
-      const error = new Error(`El usuario ${email} no existe ⛔`);
+      const error = new Error(`El usuario con ${email} no existe ⛔`);
       return res.status(404).json({
-        message: error.message,
+        msg: error.message,
       });
     }
 
     try {
       user.token = generateId();
       await user.save();
-      res.json({
-        message: `Se ha enviado un correo al destino ${email} para restablecer la contraseña 📫`,
+
+      //Enviar correo de confirmacion
+      emailOlvidePassword({
+        email: user.email,
+        nombre: user.nombre,
+        token: user.token,
       });
+
+
+      res.json({
+        msg: `Se ha enviado un correo a ${email} para recuperar la contraseña 📧`,
+      });
+      console.log(user.email);
     } catch (error) {
       console.log(error);
     }
@@ -109,12 +129,12 @@ const handlerAuthenticateUser = async (req, res) => {
     const tokenValue = await modelUser.findOne({ token });
     if (tokenValue) {
       res.json({
-        message: `El token es valido y el Usuario existe ✅`,
+        msg: `El token es valido y el Usuario existe ✅`,
       });
     } else {
       const error = new Error(`El token no es valido ⛔`);
       return res.status(404).json({
-        message: error.message,
+        msg: error.message,
       });
     }
   }
@@ -130,16 +150,16 @@ const handlerAuthenticateUser = async (req, res) => {
       try {
         await user.save();
         res.json({
-          message: `La contraseña ha sido cambiada ✅`,
+          msg: `La contraseña ha sido cambiada ✅`,
         });
       } catch (error) {
         console.log(error);
-        res.status(500).json({ message: "Error al cambiar la contraseña ⛔" });
+        res.status(500).json({ msg: "Error al cambiar la contraseña ⛔" });
       }
     } else {
       const error = new Error(`El token no es valido ⛔`);
       return res.status(404).json({
-        message: error.message,
+        msg: error.msg,
       });
     }
   }

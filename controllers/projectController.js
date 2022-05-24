@@ -2,7 +2,7 @@ import Proyecto from '../models/Project.js';
 // import Tarea from '../models/Task.js';
 
 const handlerObtenerProyectos = async (req, res) => {
-  const proyectos = await Proyecto.find().where('creador').equals(req.user);
+  const proyectos = await Proyecto.find().where('creador').equals(req.user).select('-tareas');
   res.json(proyectos);
 
 }
@@ -23,7 +23,7 @@ const handlesObtenerProyecto = async (req, res) => {
   const { id } = req.params;
   console.log(id);
 
-  const proyecto = await Proyecto.findById(id);
+  const proyecto = await Proyecto.findById(id).populate('tareas');
 
   if (!proyecto) {
     return res.status(404).json({

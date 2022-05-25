@@ -1,8 +1,16 @@
 import Proyecto from '../models/Project.js';
-// import Tarea from '../models/Task.js';
+import User from '../models/User.js';
 
 const handlerObtenerProyectos = async (req, res) => {
-  const proyectos = await Proyecto.find().where('creador').equals(req.user).select('-tareas');
+  const proyectos = await Proyecto.find({
+    '$or' : [
+      {'colaboradores': {$in: req.user}},
+      {'creador': {$in: req.user}},
+    ],
+  })
+  .where('creador')
+  .equals(req.user)
+  .select('-tareas');
   res.json(proyectos);
 
 }
@@ -23,7 +31,9 @@ const handlesObtenerProyecto = async (req, res) => {
   const { id } = req.params;
   console.log(id);
 
-  const proyecto = await Proyecto.findById(id).populate('tareas');
+  const proyecto = await Proyecto.findById(id)
+  .populate('tareas')
+  .populate('colaboradores', 'nombre email');
 
   if (!proyecto) {
     return res.status(404).json({
@@ -93,32 +103,86 @@ const handlerEliminarProyecto = async (req, res) => {
   }
 }
 
-// const handlerAgregarColaborador = async (req, res) => {
+const buscarColaborador = async (req, res) => {
+  const {email} = req.body;
 
-// }
+  const usuario = await User.findOne({email}).select(
+    '-password -confirmado -createdAt -updatedAt -token -__v');
 
-// const handlerEliminarColaborador = async (req, res) => {
+  if (!usuario) {
+    return res.status(404).json({
+      msg: 'Usuario no encontrado ⛔',
+    });
+  }
+  res.json(usuario);
+}
 
-// }
+const handlerAgregarColaborador = async (req, res) => {
+  const proyecto = await Proyecto.findById(req.params.id);
 
-// const handlerObtenerTarea = async (req, res) => {
-//   const { id } = req.params;
+  if (!proyecto) {
+    return res.status(404).json({
+      msg: 'Proyecto no encontrado ⛔',
+    });
+  }
 
-//   const existeProyecto = await Proyecto.findById(id);
+  if(proyecto.creador.toString() !== req.user._id.toString()){
+    return res.status(401).json({
+      msg: 'No esta Autorizado ⛔',
+  });
+  }
 
-//   if (!existeProyecto) {
-//     const error = new Error('Proyecto no encontrado ⛔');
-//     return res.status(404).json({
-//       msg: error.message,
-//     });
-//   }
-//   // Aqui se tiene que verificar que el usuario sea el creador del proyecto o el colaborador
+  const {email} = req.body;
 
-//   const tareas = await Tarea.find().where('proyecto').equals(id);
+  const usuario = await User.findOne({email}).select(
+    '-password -confirmado -createdAt -updatedAt -token -__v');
 
-//   res.json(tareas);
+  if (!usuario) {
+    return res.status(404).json({
+      msg: 'Usuario no encontrado ⛔',
+    });
+  }
 
-// }
+  // El colaborador no es el admin del proyecto
+  if(proyecto.creador.toString() === usuario._id.toString()){
+    return res.status(404).json({
+      msg: 'El creador del Proyecto no puede ser colaborador ⛔',
+    });
+  }
+
+  // Revisar que no este ya agreagdo al proyecto
+  if(proyecto.colaboradores.includes(usuario._id)){
+    return res.status(404).json({
+      msg: 'El Usuario ya pertenece al Proyecto ⚠️',
+    });
+  }
+
+  // Si no pertenece al proyecto, se puede agregar
+  proyecto.colaboradores.push(usuario._id);
+  await proyecto.save();
+
+  res.json({ msg: 'Colaborador Agregado al Proyecto , Correctamente ✅' });
+}
+
+const handlerEliminarColaborador = async (req, res) => {
+  const proyecto = await Proyecto.findById(req.params.id);
+
+  if (!proyecto) {
+    return res.status(404).json({
+      msg: 'Proyecto no encontrado ⛔',
+    });
+  }
+
+  if(proyecto.creador.toString() !== req.user._id.toString()){
+    return res.status(401).json({
+      msg: 'No esta Autorizado ⛔',
+  });
+  }
+// Si no pertenece al proyecto, se puede Eliminar
+  proyecto.colaboradores.pull(req.body.id);
+  await proyecto.save();
+  res.json({ msg: 'Colaborador Eliminado Correctamente ✅' });
+}
 
 export {
   handlerObtenerProyectos,
@@ -126,7 +190,7 @@ export {
   handlesObtenerProyecto,
   handlerEditarProyecto,
   handlerEliminarProyecto,
-  // handlerAgregarColaborador,
-  // handlerEliminarColaborador,
-  // handlerObtenerTarea,
+  buscarColaborador,
+  handlerAgregarColaborador,
+  handlerEliminarColaborador,
 }

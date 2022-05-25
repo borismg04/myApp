@@ -120,7 +120,8 @@ const handlerEliminarTarea = async (req, res) => {
 
 const handlerCambiarEstadoTarea = async (req, res) => {
   const { id } = req.params;
-  const tarea = await Tarea.findById(id).populate('proyecto');
+  const tarea = await Tarea.findById(id)
+    .populate('proyecto');
 
   if (!tarea) {
     const error = new Error('Tarea no existe ⛔');
@@ -140,8 +141,14 @@ const handlerCambiarEstadoTarea = async (req, res) => {
   }
 
   tarea.estado = !tarea.estado;
+  tarea.completado = req.user._id;
   await tarea.save();
-  res.json(tarea);
+
+  const tareaAlmacenada = await Tarea.findById(id)
+    .populate('proyecto')
+    .populate('completado');
+
+  res.json(tareaAlmacenada);
 }
 
 export {

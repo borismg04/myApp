@@ -32,6 +32,7 @@ const taskSchema = new mongoose.Schema({
   completado: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
+    default: null,
   },
 }, {
   timestamps: true,

@@ -39,6 +39,22 @@ app.use('/api/tareas', taskRoutes);
 // Conexion a la base de datos
 const PORT = process.env.PORT || 8080;
 
-app.listen(PORT, () => {
+const servidor = app.listen(PORT, () => {
   console.log(`Server running 🚀 at http://localhost:${PORT}🚀/`);
 })
+
+//Socket.io
+import { Server } from 'socket.io';
+
+const io = new Server(servidor, {
+  pingTimeout: 60000,
+  cors: {
+    origin: process.env.FRONTEND_URL,
+  },
+});
+
+io.on('connection', (socket) => {
+  console.log('👨‍💻 Conectado a SOCKET.IO 🤖');
+  // Definir Eventos de SOCKET.IO
+})
+

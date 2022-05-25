@@ -43,8 +43,8 @@ const servidor = app.listen(PORT, () => {
   console.log(`Server running 🚀 at http://localhost:${PORT}🚀/`);
 })
 
-//Socket.io
-import { Server } from 'socket.io';
+// Socket.io
+import { Server } from "socket.io";
 
 const io = new Server(servidor, {
   pingTimeout: 60000,
@@ -53,8 +53,35 @@ const io = new Server(servidor, {
   },
 });
 
-io.on('connection', (socket) => {
-  console.log('👨‍💻 Conectado a SOCKET.IO 🤖');
-  // Definir Eventos de SOCKET.IO
-})
+io.on("connection", (socket) => {
+  // console.log("Conectado a socket.io");
+
+  // Definir los eventos de socket io
+  socket.on("abrir proyecto", (proyecto) => {
+    socket.join(proyecto);
+  });
+
+  socket.on("nueva tarea", (tarea) => {
+    const proyecto = tarea.proyecto;
+    socket.to(proyecto).emit("tarea agregada", tarea);
+  });
+
+  socket.on("eliminar tarea", (tarea) => {
+    const proyecto = tarea.proyecto;
+    socket.to(proyecto).emit("tarea eliminada", tarea);
+  });
+
+  socket.on("actualizar tarea", (tarea) => {
+    const proyecto = tarea.proyecto._id;
+    socket.to(proyecto).emit("tarea actualizada", tarea);
+  })
+
+  socket.on("cambiar estado", (tarea) => {
+    const proyecto = tarea.proyecto._id;
+    socket.to(proyecto).emit("nuevo estado", tarea);
+  })
+
+});
+
+
 

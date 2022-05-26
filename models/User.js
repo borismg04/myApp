@@ -46,4 +46,3 @@ userSchema.methods.isValidPassword = async function (passwordFormulario) {
 const User = mongoose.model('User', userSchema);
 
 export default User;
-
